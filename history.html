@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Neural Odyssey: A Journey Through AI History</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cursor-x: 50%;
+            --cursor-y: 50%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        /* Intro Section */
+        .intro {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        .intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255,255,255,0.03) 2px,
+                    rgba(255,255,255,0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .neural-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .intro-subtitle {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            z-index: 3;
+        }
+
+        .scroll-indicator span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #64748b;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, #64748b, transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            position: relative;
+            background: #0a0a0a;
+        }
+
+        .timeline-path {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, 
+                #10b981 0%, 
+                #f59e0b 25%, 
+                #06b6d4 50%, 
+                #8b5cf6 75%, 
+                #ec4899 100%);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .timeline-path-glow {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, 
+                rgba(16, 185, 129, 0.1) 0%, 
+                rgba(245, 158, 11, 0.1) 25%, 
+                rgba(6, 182, 212, 0.1) 50%, 
+                rgba(139, 92, 246, 0.1) 75%, 
+                rgba(236, 72, 153, 0.1) 100%);
+            filter: blur(20px);
+            z-index: 0;
+        }
+
+        /* Era Sections */
+        .era-section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 6rem 2rem;
+            overflow: hidden;
+        }
+
+        .era-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .era-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .era-header {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .timeline-path, .timeline-path-glow {
+                left: 2rem;
+            }
+        }
+
+        .era-text {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .era-year {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .era-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .era-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.8;
+            max-width: 500px;
+        }
+
+        .era-visual {
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        /* 1950s - The Genesis */
+        .era-1950s {
+            background: linear-gradient(135deg, #0f172a 0%, #022c22 100%);
+        }
+        .era-1950s .era-year { color: #10b981; text-shadow: 0 0 40px rgba(16,185,129,0.4); }
+        .era-1950s .era-title { color: #d1fae5; }
+        .era-1950s .era-description { color: #a7f3d0; }
+
+        .terminal {
+            font-family: 'Space Mono', monospace;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(16,185,129,0.2), inset 0 0 30px rgba(16,185,129,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: rgba(16,185,129,0.1);
+            border-bottom: 1px solid #10b981;
+        }
+
+        .terminal-text {
+            color: #10b981;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: #10b981;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 1960s-70s - The Awakening */
+        .era-1960s {
+            background: linear-gradient(135deg, #1c1917 0%, #451a03 100%);
+        }
+        .era-1960s .era-year { color: #f59e0b; text-shadow: 0 0 40px rgba(245,158,11,0.4); }
+        .era-1960s .era-title { color: #fef3c7; }
+        .era-1960s .era-description { color: #fde68a; }
+
+        .mainframe {
+            width: 100%;
+            max-width: 450px;
+            height: 350px;
+            background: linear-gradient(145deg, #292524 0%, #1c1917 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 50px rgba(245,158,11,0.05);
+            border: 1px solid #44403c;
+        }
+
+        .mainframe-light {
+            background: #1c1917;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mainframe-light::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+            animation: mainframeBlink 3s infinite;
+        }
+
+        .mainframe-light:nth-child(2n)::after { animation-delay: 0.5s; }
+        .mainframe-light:nth-child(3n)::after { animation-delay: 1s; }
+        .mainframe-light:nth-child(5n)::after { animation-delay: 1.5s; }
+
+        @keyframes mainframeBlink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* 1980s - The Experts */
+        .era-1980s {
+            background: linear-gradient(135deg, #0c4a6e 0%, #082f49 100%);
+        }
+        .era-1980s .era-year { color: #06b6d4; text-shadow: 0 0 40px rgba(6,182,212,0.4); }
+        .era-1980s .era-title { color: #cffafe; }
+        .era-1980s .era-description { color: #a5f3fc; }
+
+        .grid-floor {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .grid-floor-inner {
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(6,182,212,0.2) 1px, transparent 1px),
+                linear-gradient(rgba(6,182,212,0.2) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: rotateX(60deg);
+            transform-origin: center bottom;
+            animation: gridMove 10s linear infinite;
+            box-shadow: 0 0 50px rgba(6,182,212,0.3);
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
+        }
+
+        /* 1990s - The Matrix */
+        .era-1990s {
+            background: linear-gradient(135deg, #052e16 0%, #000 100%);
+        }
+        .era-1990s .era-year { color: #22c55e; text-shadow: 0 0 40px rgba(34,197,94,0.4); }
+        .era-1990s .era-title { color: #bbf7d0; }
+        .era-1990s .era-description { color: #86efac; }
+
+        .matrix-canvas {
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            border: 1px solid #166534;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* 2000s - The Learning */
+        .era-2000s {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .era-2000s .era-year { color: #3b82f6; text-shadow: 0 0 40px rgba(59,130,246,0.3); }
+        .era-2000s .era-title { color: #1e293b; }
+        .era-2000s .era-description { color: #475569; }
+        .era-2000s .event-card { background: white; border: 1px solid #e2e8f0; }
+        .era-2000s .event-title { color: #1e293b; }
+        .era-2000s .event-desc { color: #64748b; }
+
+        .data-viz {
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .bar {
+            width: 40px;
+            background: linear-gradient(to top, #3b82f6, #60a5fa);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .bar:hover { filter: brightness(1.2); transform: scaleY(1.05); }
+
+        /* 2010s - The Deep Revolution */
+        .era-2010s {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        }
+        .era-2010s .era-year { color: #8b5cf6; text-shadow: 0 0 40px rgba(139,92,246,0.4); }
+        .era-2010s .era-title { color: #ede9fe; }
+        .era-2010s .era-description { color: #ddd6fe; }
+
+        .neural-net {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            position: relative;
+        }
+
+        .neural-node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139,92,246,0.6);
+            transition: all 0.3s;
+        }
+
+        .neural-node:hover {
+            transform: scale(1.5);
+            background: #c4b5fd;
+        }
+
+        .neural-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139,92,246,0.5), transparent);
+            transform-origin: left center;
+        }
+
+        /* 2020s - The Future */
+        .era-2020s {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f172a 100%);
+            position: relative;
+        }
+        .era-2020s::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139,92,246,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236,72,153,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(59,130,246,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .era-2020s .era-year { 
+            background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(139,92,246,0.5));
+        }
+        .era-2020s .era-title { color: #fae8ff; }
+        .era-2020s .era-description { color: #e9d5ff; }
+
+        .hologram {
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: hologramFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes hologramFloat {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateY(5deg); }
+        }
+
+        .hologram-ring {
+            position: absolute;
+            border: 2px solid rgba(139,92,246,0.3);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(139,92,246,0.2), inset 0 0 30px rgba(139,92,246,0.1);
+        }
+
+        .hologram-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(236,72,153,0.8), rgba(139,92,246,0.4), transparent);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(236,72,153,0.6);
+            animation: corePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes corePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .event-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .event-year {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-desc {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        .event-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 0;
+        }
+
+        .event-card.active .event-detail {
+            max-height: 300px;
+            margin-top: 1rem;
+        }
+
+        .event-detail-text {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Era specific card colors */
+        .era-1950s .event-card:hover { border-color: #10b981; box-shadow: 0 20px 40px rgba(16,185,129,0.2); }
+        .era-1960s .event-card:hover { border-color: #f59e0b; box-shadow: 0 20px 40px rgba(245,158,11,0.2); }
+        .era-1980s .event-card:hover { border-color: #06b6d4; box-shadow: 0 20px 40px rgba(6,182,212,0.2); }
+        .era-1990s .event-card:hover { border-color: #22c55e; box-shadow: 0 20px 40px rgba(34,197,94,0.2); }
+        .era-2000s .event-card:hover { border-color: #3b82f6; box-shadow: 0 20px 40px rgba(59,130,246,0.2); }
+        .era-2010s .event-card:hover { border-color: #8b5cf6; box-shadow: 0 20px 40px rgba(139,92,246,0.2); }
+        .era-2020s .event-card:hover { border-color: #ec4899; box-shadow: 0 20px 40px rgba(236,72,153,0.2); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.1);
+            transform: rotate(90deg);
+        }
+
+        .modal-year {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        /* Progress Indicator */
+        .progress-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .progress-nav { display: none; }
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .progress-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .progress-dot:hover::after {
+            opacity: 1;
+        }
+
+        .progress-dot.active {
+            background: #fff;
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .progress-dot:hover {
+            transform: scale(1.3);
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <div class="noise"></div>
+
+    <!-- Progress Navigation -->
+    <div class="progress-nav">
+        <div class="progress-dot active" data-label="1950s" data-target="1950s"></div>
+        <div class="progress-dot" data-label="1960s" data-target="1960s"></div>
+        <div class="progress-dot" data-label="1980s" data-target="1980s"></div>
+        <div class="progress-dot" data-label="1990s" data-target="1990s"></div>
+        <div class="progress-dot" data-label="2000s" data-target="2000s"></div>
+        <div class="progress-dot" data-label="2010s" data-target="2010s"></div>
+        <div class="progress-dot" data-label="2020s" data-target="2020s"></div>
+    </div>
+
+    <!-- Intro -->
+    <section class="intro">
+        <canvas class="neural-canvas" id="neuralCanvas"></canvas>
+        <div class="intro-content">
+            <h1 class="intro-title">The Neural Odyssey</h1>
+            <p class="intro-subtitle">A journey through the history of Artificial Intelligence<br>from the Turing Test to the Age of Large Language Models</p>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to Begin</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <div class="timeline-container" id="timeline">
+        <div class="timeline-path-glow"></div>
+        <div class="timeline-path"></div>
+
+        <!-- 1950s -->
+        <section class="era-section era-1950s" id="era-1950s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">1950s</div>
+                        <h2 class="era-title">The Genesis</h2>
+                        <p class="era-description">The theoretical foundations are laid. Alan Turing asks "Can machines think?" and the Dartmouth Workshop coins the term "Artificial Intelligence," igniting a field that would reshape human civilization.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="terminal">
+                            <div class="terminal-text">
+                                > INITIATE_TURING_TEST.exe<br>
+                                > Can machines think?<br>
+                                > Loading consciousness module...<br>
+                                > Dartmouth Workshop: 1956<br>
+                                > Term 'AI' initialized<br>
+                                > Begin simulation<span class="cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="1950" data-title="The Turing Test" data-desc="Alan Turing proposes the Imitation Game as a measure of machine intelligence. The question 'Can machines think?' becomes the philosophical foundation of AI research. Turing predicts that by the year 2000, machines will be able to fool 30% of human judges." data-detail="In his seminal paper 'Computing Machinery and Intelligence,' Turing argued that if a machine could carry on a conversation indistinguishable from a human, we should regard it as intelligent. This test remains influential and controversial to this day, serving as both a benchmark and a critique point for AI capabilities.">
+                        <div class="event-year">1950</div>
+                        <div class="event-title">The Turing Test</div>
+                        <div class="event-desc">Alan Turing asks: &quot;Can machines think?&quot;</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The Imitation Game proposes that a machine is intelligent if it can fool a human into thinking it is also human.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1956" data-title="The Dartmouth Workshop" data-desc="John McCarthy, Marvin Minsky, Nathaniel Rochester, and Claude Shannon organize a summer workshop at Dartmouth College. This event officially births the term 'Artificial Intelligence' and establishes AI as a distinct academic discipline." data-detail="The proposal stated: 'We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College.' The workshop brought together the founding fathers of AI and set the agenda for decades of research.">
+                        <div class="event-year">1956</div>
+                        <div class="event-title">The Dartmouth Workshop</div>
+                        <div class="event-desc">The term &quot;Artificial Intelligence&quot; is officially born.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The founding event of AI as a field, bringing together McCarthy, Minsky, Rochester, and Shannon.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1958" data-title="The Perceptron" data-desc="Frank Rosenblatt develops the Perceptron at the Cornell Aeronautical Laboratory. This early neural network model demonstrates the ability to learn from data, laying the groundwork for modern deep learning." data-detail="Rosenblatt built the Mark I Perceptron machine, an analog computer designed to recognize images. It used a grid of photocells and motorized potentiometers to adjust weights. The New York Times reported it as a computer that would 'be able to walk, talk, see, write, reproduce itself and be conscious of its existence.'">
+                        <div class="event-year">1958</div>
+                        <div class="event-title">The Perceptron</div>
+                        <div class="event-desc">Frank Rosenblatt creates the first neural network model.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">An algorithm for supervised learning of binary classifiers, the foundation of neural networks.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1960s-70s -->
+        <section class="era-section era-1960s" id="era-1960s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">1960s-70s</div>
+                        <h2 class="era-title">The Awakening</h2>
+                        <p class="era-description">The first golden age of AI. ELIZA simulates conversation, Shakey the Robot navigates the physical world, and symbolic AI dominates. But optimism meets reality as computational limits trigger the first AI Winter.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="mainframe">
+                            <div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div>
+                            <div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div>
+                            <div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div>
+                            <div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div><div class="mainframe-light"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="1966" data-title="ELIZA" data-desc="Joseph Weizenbaum creates ELIZA at MIT, an early natural language processing computer program that simulates a Rogerian psychotherapist. It surprises users with seemingly intelligent responses despite having no real understanding." data-detail="ELIZA used pattern matching and substitution methodology to simulate conversation. The most famous script, DOCTOR, responded to user inputs with non-directional questions. Weizenbaum was disturbed by how quickly users anthropomorphized the program, leading him to become an AI critic.">
+                        <div class="event-year">1966</div>
+                        <div class="event-title">ELIZA</div>
+                        <div class="event-desc">The first chatbot simulates a psychotherapist.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Weizenbaum's creation showed that simple pattern matching could create the illusion of understanding.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1969" data-title="Shakey the Robot" data-desc="Developed at SRI International, Shakey becomes the first general-purpose mobile robot able to reason about its own actions. It combines computer vision, natural language processing, and autonomous navigation." data-detail="Shakey could analyze commands and break them down into a series of simple actions. It operated in a specially designed environment with colored objects and radio beacons. The project combined AI, computer vision, and robotics, earning it the title 'first electronic person.'">
+                        <div class="event-year">1969</div>
+                        <div class="event-title">Shakey the Robot</div>
+                        <div class="event-desc">First general-purpose mobile robot with reasoning.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Shakey combined locomotion, perception, and problem-solving in one platform.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1974" data-title="First AI Winter" data-desc="Funding dries up as the limitations of early AI become apparent. The Lighthill Report criticizes AI's failure to deliver on grand promises. Connectionist approaches are abandoned after Marvin Minsky and Seymour Papert's critique of perceptrons." data-detail="Sir James Lighthill's report to the British Science Research Council concluded that AI research had failed to achieve its grand objectives. Combined with reduced DARPA funding in the US, the field entered a period of reduced interest and funding that lasted through the early 1980s.">
+                        <div class="event-year">1974</div>
+                        <div class="event-title">First AI Winter</div>
+                        <div class="event-desc">Reality checks and funding cuts freeze progress.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The Lighthill Report and funding cuts lead to a decade of reduced AI research.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1980s -->
+        <section class="era-section era-1980s" id="era-1980s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">1980s</div>
+                        <h2 class="era-title">The Expert Systems</h2>
+                        <p class="era-description">Knowledge becomes power. Rule-based expert systems like MYCIN and XCON bring AI into the corporate world. Japan's Fifth Generation Computer Project ignites global competition, but the bubble bursts again by decade's end.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="grid-floor">
+                            <div class="grid-floor-inner"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="1980" data-title="XCON & MYCIN" data-desc="Expert systems reach commercial viability. XCON configures VAX computers for DEC, saving millions. MYCIN diagnoses blood infections with accuracy approaching human specialists, pioneering medical AI." data-detail="XCON (originally R1) contained over 10,000 rules and processed 100,000 lines of code. MYCIN used a knowledge base of about 600 rules and could outperform junior doctors in diagnosing meningitis and bacteremia. These systems proved AI could deliver practical value in narrow domains.">
+                        <div class="event-year">1980</div>
+                        <div class="event-title">XCON &amp; MYCIN</div>
+                        <div class="event-desc">Expert systems prove AI's commercial value.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Rule-based systems dominate commercial AI applications, from medicine to computer configuration.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1982" data-title="Fifth Generation" data-desc="Japan launches an ambitious 10-year plan to create computers using massively parallel computing and logic programming. The project spurs global panic and competitive funding in the US and Europe, though it ultimately falls short of its goals." data-detail="The Japanese Ministry of International Trade and Industry invested $400 million with the goal of creating computers capable of AI-style inferences from large databases. While the specific hardware goals were not met, the project accelerated parallel computing research and global AI investment.">
+                        <div class="event-year">1982</div>
+                        <div class="event-title">Fifth Generation Project</div>
+                        <div class="event-desc">Japan's ambitious AI computer initiative.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">A national project that reshaped global computing strategy despite not meeting all objectives.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1987" data-title="Second AI Winter" data-desc="The market for specialized Lisp machines collapses. Desktop computers from IBM and Apple become powerful enough to run simpler alternatives. Expert systems prove too brittle and expensive to maintain." data-detail="Companies like Symbolics and LMI, which built specialized AI hardware, saw their market evaporate. The end of the Cold War reduced defense funding for AI research. Machine learning approaches would remain in the shadows until the late 1990s.">
+                        <div class="event-year">1987</div>
+                        <div class="event-title">Second AI Winter</div>
+                        <div class="event-desc">The collapse of the Lisp machine market.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Specialized hardware becomes obsolete as general-purpose computers catch up.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1990s -->
+        <section class="era-section era-1990s" id="era-1990s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">1990s</div>
+                        <h2 class="era-title">The Quiet Rise</h2>
+                        <p class="era-description">Machine learning emerges from the shadows. Statistical methods replace hard-coded rules. IBM's Deep Blue defeats world chess champion Garry Kasparov, proving machines can master human intellect at its highest level.</p>
+                    </div>
+                    <div class="era-visual">
+                        <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="1997" data-title="Deep Blue vs Kasparov" data-desc="IBM's Deep Blue defeats reigning world chess champion Garry Kasparov in a six-game match. The victory is a watershed moment, demonstrating that brute-force search combined with specialized hardware can solve complex intellectual tasks." data-detail="Deep Blue used custom VLSI chips to evaluate 200 million positions per second. Kasparov won the first match in 1996 but lost the rematch in 1997. The victory sparked debates about whether this constituted true intelligence or merely massive computation, a debate that continues today.">
+                        <div class="event-year">1997</div>
+                        <div class="event-title">Deep Blue vs Kasparov</div>
+                        <div class="event-desc">AI defeats the world chess champion.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">A landmark moment where specialized hardware and search algorithms beat human strategic thinking.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1998" data-title="LeNet-5" data-desc="Yann LeCun's convolutional neural network demonstrates practical handwriting recognition. Though largely unnoticed by the mainstream, it proves that neural networks can solve real-world vision problems, presaging the deep learning revolution." data-detail="LeNet-5 used convolutional layers to automatically learn spatial hierarchies of features from images. It was deployed by banks to recognize handwritten digits on checks. This architecture would become the template for modern computer vision systems nearly two decades later.">
+                        <div class="event-year">1998</div>
+                        <div class="event-title">LeNet-5</div>
+                        <div class="event-desc">Convolutional networks prove their worth.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">LeCun's architecture for handwritten digit recognition lays groundwork for modern computer vision.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="1990s" data-title="Statistical Revolution" data-desc="Hidden Markov Models dominate speech recognition. Support Vector Machines emerge as powerful classifiers. The field shifts from symbolic logic to statistical learning, laying the mathematical foundations for modern AI." data-detail="The paradigm shift from 'good old-fashioned AI' (GOFAI) to statistical methods was driven by increases in data availability and computing power. Judea Pearl's work on probabilistic reasoning and causal inference provided new frameworks for uncertain reasoning.">
+                        <div class="event-year">1990s</div>
+                        <div class="event-title">Statistical Revolution</div>
+                        <div class="event-desc">Machine learning overtakes symbolic AI.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Data-driven approaches begin to dominate over hand-coded knowledge bases.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2000s -->
+        <section class="era-section era-2000s" id="era-2000s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">2000s</div>
+                        <h2 class="era-title">The Learning Era</h2>
+                        <p class="era-description">The internet unleashes a tsunami of data. Geoffrey Hinton's deep learning revival, the ImageNet challenge, and kernel methods transform pattern recognition. AI begins to permeate everyday technology silently but surely.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="data-viz" id="dataViz">
+                            <div class="bar" style="height: 20%;"></div>
+                            <div class="bar" style="height: 35%;"></div>
+                            <div class="bar" style="height: 50%;"></div>
+                            <div class="bar" style="height: 45%;"></div>
+                            <div class="bar" style="height: 70%;"></div>
+                            <div class="bar" style="height: 60%;"></div>
+                            <div class="bar" style="height: 85%;"></div>
+                            <div class="bar" style="height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="2006" data-title="Deep Learning Revival" data-desc="Geoffrey Hinton and collaborators demonstrate how deep belief networks can be trained layer by layer. This breakthrough revives neural network research and sets the stage for the deep learning explosion of the 2010s." data-detail="Hinton's 2006 papers on deep belief networks showed that unsupervised pre-training could overcome the vanishing gradient problem. Yoshua Bengio and Yann LeCun made parallel advances. The 'three godfathers of deep learning' would later share the 2018 Turing Award.">
+                        <div class="event-year">2006</div>
+                        <div class="event-title">Deep Learning Revival</div>
+                        <div class="event-desc">Hinton reignites neural network research.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Layer-wise pre-training makes deep neural networks feasible again.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2009" data-title="ImageNet" data-desc="Fei-Fei Li launches the ImageNet dataset containing millions of labeled images. This massive dataset becomes the fuel for the deep learning revolution, enabling researchers to train increasingly large and capable neural networks." data-detail="ImageNet was built using Amazon Mechanical Turk to label over 14 million images across 20,000 categories. The annual ImageNet Large Scale Visual Recognition Challenge (ILSVRC), starting in 2010, became the Olympics of computer vision and the catalyst for the AlexNet breakthrough.">
+                        <div class="event-year">2009</div>
+                        <div class="event-title">ImageNet Dataset</div>
+                        <div class="event-desc">Big data meets computer vision.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">A massive labeled dataset that becomes the benchmark for visual recognition.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2000s" data-title="The Rise of Big Data" data-desc="Google's PageRank, Netflix Prize, and recommender systems demonstrate AI's commercial power. Support Vector Machines and Random Forests become standard tools. AI quietly powers search, recommendations, and fraud detection." data-detail="The Netflix Prize in 2006 offered $1 million for improving movie recommendations by 10%. It attracted thousands of teams and popularized collaborative filtering. Meanwhile, Google Translate (2006) and Google Search integrated machine learning at massive scale.">
+                        <div class="event-year">2000s</div>
+                        <div class="event-title">The Rise of Big Data</div>
+                        <div class="event-desc">AI becomes an invisible utility.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Search engines, recommendations, and translation quietly transform daily life.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2010s -->
+        <section class="era-section era-2010s" id="era-2010s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">2010s</div>
+                        <h2 class="era-title">The Deep Revolution</h2>
+                        <p class="era-description">AlexNet's ImageNet victory ignites the deep learning explosion. GPUs become AI accelerators. AlphaGo defeats the world's best Go player. Transformers emerge, setting the stage for the generative AI era. AI goes from academic curiosity to global strategic priority.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="neural-net" id="neuralNet"></div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="2012" data-title="AlexNet Breakthrough" data-desc="Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton's AlexNet wins ImageNet by a massive margin using deep convolutional networks on GPUs. This moment marks the official beginning of the deep learning era." data-detail="AlexNet achieved 15.3% top-5 error, beating the next best competitor by over 10 percentage points. It used two GPUs, ReLU activations, and dropout regularization. The victory proved that deep learning with sufficient data and compute could dramatically outperform traditional computer vision methods.">
+                        <div class="event-year">2012</div>
+                        <div class="event-title">AlexNet Breakthrough</div>
+                        <div class="event-desc">Deep learning conquers computer vision.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The ImageNet 2012 victory that convinced the world deep learning was the future.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2016" data-title="AlphaGo vs Lee Sedol" data-desc="DeepMind's AlphaGo defeats Lee Sedol, one of the world's strongest Go players, 4-1. Go, with its astronomical complexity, was considered the holy grail of AI. The victory captures global imagination and signals AI's arrival." data-detail="AlphaGo combined deep neural networks with Monte Carlo tree search. It trained on 30 million positions from human games, then improved through self-play. Move 37 in Game 2 was described as 'beautiful' and 'creative,' challenging assumptions that machines could only mimic human play.">
+                        <div class="event-year">2016</div>
+                        <div class="event-title">AlphaGo vs Lee Sedol</div>
+                        <div class="event-desc">AI masters the ancient game of Go.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">A historic match watched by 280 million people, proving AI can master intuition.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2017" data-title="The Transformer" data-desc="Google researchers publish 'Attention Is All You Need,' introducing the Transformer architecture. This paper revolutionizes natural language processing and becomes the foundation for GPT, BERT, and the entire generative AI wave." data-detail="The Transformer replaced recurrence with self-attention mechanisms, enabling parallel training and better long-range dependencies. The paper's eight authors from Google Brain created an architecture that would power virtually every major language model from 2018 onward, from BERT to GPT-4.">
+                        <div class="event-year">2017</div>
+                        <div class="event-title">The Transformer</div>
+                        <div class="event-desc">&quot;Attention Is All You Need&quot; changes everything.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The architecture that makes modern large language models possible.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2014" data-title="Generative Adversarial Networks" data-desc="Ian Goodfellow introduces GANs, a framework where two neural networks compete. This innovation sparks the generative AI movement, enabling machines to create photorealistic images, music, and eventually video." data-detail="The generator creates fake data while the discriminator tries to detect it. Over time, both improve through competition. GANs produced the first compelling AI-generated faces and artwork, foreshadowing the creative explosion that would arrive with diffusion models in the 2020s.">
+                        <div class="event-year">2014</div>
+                        <div class="event-title">GANs</div>
+                        <div class="event-desc">AI learns to create, not just classify.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Adversarial training opens the door to generative AI applications.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2020s -->
+        <section class="era-section era-2020s" id="era-2020s">
+            <div class="era-content">
+                <div class="era-header">
+                    <div class="era-text">
+                        <div class="era-year">2020s</div>
+                        <h2 class="era-title">The Intelligence Explosion</h2>
+                        <p class="era-description">GPT-3 demonstrates emergent capabilities. ChatGPT captures the world's attention, becoming the fastest-growing application in history. Multimodal AI generates images, video, and code from text. The race toward AGI begins, bringing both wonder and existential questions.</p>
+                    </div>
+                    <div class="era-visual">
+                        <div class="hologram">
+                            <div class="hologram-ring" style="width: 300px; height: 300px; animation: spin 20s linear infinite;"></div>
+                            <div class="hologram-ring" style="width: 220px; height: 220px; animation: spin 15s linear infinite reverse;"></div>
+                            <div class="hologram-ring" style="width: 140px; height: 140px; animation: spin 10s linear infinite;"></div>
+                            <div class="hologram-core"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card" data-year="2020" data-title="GPT-3" data-desc="OpenAI releases GPT-3 with 175 billion parameters. The model demonstrates remarkable few-shot learning capabilities, generating coherent essays, code, poetry, and dialogue. It reveals that scale alone can unlock unexpected abilities." data-detail="GPT-3 showed emergent capabilities not present in smaller models, including arithmetic, translation, and code generation. The API launch enabled thousands of applications. Critics raised concerns about bias, misinformation, and the environmental cost of training such large models.">
+                        <div class="event-year">2020</div>
+                        <div class="event-title">GPT-3</div>
+                        <div class="event-desc">Scale unlocks emergent intelligence.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">175 billion parameters demonstrate that bigger models can do things no one trained them to do.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2022" data-title="ChatGPT" data-desc="OpenAI launches ChatGPT, a conversational interface built on GPT-3.5. It gains 100 million users in two months, faster than any application in history. AI goes mainstream, sparking both excitement and anxiety across society." data-detail="ChatGPT's release marked the 'iPhone moment' for AI. It demonstrated that alignment techniques like RLHF could make powerful models helpful and harmless. The launch triggered a global AI arms race, with Google launching Bard, Meta releasing Llama, and Anthropic creating Claude.">
+                        <div class="event-year">2022</div>
+                        <div class="event-title">ChatGPT</div>
+                        <div class="event-desc">AI becomes a household name.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The fastest-growing consumer application in history changes how the world views AI.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2023" data-title="The Multimodal Era" data-desc="GPT-4, Gemini, and Claude demonstrate reasoning across text, images, and code. Midjourney, Stable Diffusion, and DALL-E 3 make image generation accessible. AI begins to reason, see, and create like never before." data-detail="GPT-4 passed the bar exam, aced SATs, and demonstrated theory of mind in some tests. Multimodal models could interpret memes, solve visual puzzles, and write code from screenshots. Meanwhile, AI video generation with Runway and Pika hinted at a future where reality itself becomes editable.">
+                        <div class="event-year">2023</div>
+                        <div class="event-title">The Multimodal Era</div>
+                        <div class="event-desc">AI sees, hears, and creates.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">Models break the text barrier and begin processing the full spectrum of human media.</div>
+                        </div>
+                    </div>
+                    <div class="event-card" data-year="2024+" data-title="The Path to AGI" data-desc="AI systems approach human-level performance across domains. The conversation shifts from 'what AI can do' to 'what it means for humanity.' Governments regulate, researchers warn, and builders accelerate toward artificial general intelligence." data-detail="The release of reasoning models like o1 and the scaling of training compute to unprecedented levels suggest AGI may be achievable within years rather than decades. The field grapples with alignment, safety, and the societal implications of superhuman AI. The journey that began in 1950 reaches its most consequential chapter.">
+                        <div class="event-year">2024+</div>
+                        <div class="event-title">The Path to AGI</div>
+                        <div class="event-desc">The final frontier approaches.</div>
+                        <div class="event-detail">
+                            <div class="event-detail-text">The race toward general intelligence raises humanity's biggest questions.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-year" id="modalYear"></div>
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+
+    <script>
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Intro Animations
+        const introTl = gsap.timeline({ delay: 0.5 });
+        introTl.to('.intro-title', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' })
+               .to('.intro-subtitle', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.6')
+               .to('.scroll-indicator', { opacity: 1, duration: 1 }, '-=0.4');
+
+        // Neural Canvas Animation
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: 0, y: 0 };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? 'rgba(139,92,246,' : 'rgba(59,130,246,';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 200) {
+                    this.x -= dx * 0.01;
+                    this.y -= dy * 0.01;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color + '0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 150) {
+                        ctx.strokeStyle = `rgba(139,92,246,${0.2 * (1 - dist/150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // Matrix Rain for 1990s
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        let matrixW, matrixH;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+        const drops = [];
+
+        function resizeMatrix() {
+            matrixW = matrixCanvas.width = matrixCanvas.offsetWidth;
+            matrixH = matrixCanvas.height = matrixCanvas.offsetHeight;
+            drops.length = 0;
+            for (let i = 0; i < matrixW / 14; i++) {
+                drops[i] = Math.random() * -100;
+            }
+        }
+        setTimeout(resizeMatrix, 100);
+        window.addEventListener('resize', resizeMatrix);
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(5, 46, 22, 0.1)';
+            matrixCtx.fillRect(0, 0, matrixW, matrixH);
+            matrixCtx.fillStyle = '#22c55e';
+            matrixCtx.font = '14px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                matrixCtx.fillText(char, i * 14, drops[i] * 14);
+                if (drops[i] * 14 > matrixH && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+            requestAnimationFrame(drawMatrix);
+        }
+        drawMatrix();
+
+        // Data Viz Animation for 2000s
+        const dataViz = document.getElementById('dataViz');
+        const bars = dataViz.querySelectorAll('.bar');
+
+        ScrollTrigger.create({
+            trigger: '#era-2000s',
+            start: 'top 60%',
+            onEnter: () => {
+                gsap.from(bars, {
+                    height: 0,
+                    duration: 1.5,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                });
+            }
+        });
+
+        // Neural Network Animation for 2010s
+        const neuralNet = document.getElementById('neuralNet');
+        const layers = [4, 6, 8, 6, 4];
+        const nodePositions = [];
+        const neuralNodes = [];
+        const neuralLines = [];
+
+        function createNeuralNet() {
+            neuralNet.innerHTML = '';
+            nodePositions.length = 0;
+            neuralNodes.length = 0;
+            neuralLines.length = 0;
+
+            const width = neuralNet.offsetWidth;
+            const height = neuralNet.offsetHeight;
+            const layerWidth = width / (layers.length - 1);
+
+            layers.forEach((nodeCount, layerIdx) => {
+                const x = layerIdx * layerWidth + (layerWidth / 2);
+                const layerNodes = [];
+                for (let i = 0; i < nodeCount; i++) {
+                    const y = (height / (nodeCount + 1)) * (i + 1);
+                    layerNodes.push({ x, y });
+
+                    const node = document.createElement('div');
+                    node.className = 'neural-node';
+                    node.style.left = (x - 10) + 'px';
+                    node.style.top = (y - 10) + 'px';
+                    neuralNet.appendChild(node);
+                    neuralNodes.push(node);
+                }
+                nodePositions.push(layerNodes);
+            });
+
+            for (let l = 0; l < nodePositions.length - 1; l++) {
+                nodePositions[l].forEach(n1 => {
+                    nodePositions[l + 1].forEach(n2 => {
+                        const line = document.createElement('div');
+                        line.className = 'neural-line';
+                        const dx = n2.x - n1.x;
+                        const dy = n2.y - n1.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        const angle = Math.atan2(dy, dx);
+                        line.style.width = dist + 'px';
+                        line.style.left = n1.x + 'px';
+                        line.style.top = n1.y + 'px';
+                        line.style.transform = `rotate(${angle}rad)`;
+                        line.style.opacity = Math.random() * 0.5 + 0.1;
+                        neuralNet.appendChild(line);
+                        neuralLines.push(line);
+                    });
+                });
+            }
+        }
+
+        setTimeout(createNeuralNet, 100);
+        window.addEventListener('resize', createNeuralNet);
+
+        // Animate neural nodes
+        setInterval(() => {
+            if (neuralNodes.length > 0) {
+                const randomNode = neuralNodes[Math.floor(Math.random() * neuralNodes.length)];
+                gsap.to(randomNode, {
+                    scale: 1.5,
+                    duration: 0.3,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: 'power2.out'
+                });
+            }
+        }, 500);
+
+        // Scroll Animations for each era
+        document.querySelectorAll('.era-section').forEach(section => {
+            const text = section.querySelector('.era-text');
+            const visual = section.querySelector('.era-visual');
+            const cards = section.querySelectorAll('.event-card');
+
+            gsap.to(text, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 70%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
+
+            gsap.to(visual, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 70%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                delay: 0.2,
+                ease: 'power3.out'
+            });
+
+            cards.forEach((card, i) => {
+                gsap.to(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    ease: 'power3.out',
+                    startAt: { opacity: 0, y: 30 }
+                });
+            });
+        });
+
+        // Progress Navigation
+        const progressDots = document.querySelectorAll('.progress-dot');
+        const eraSections = document.querySelectorAll('.era-section');
+
+        eraSections.forEach((section, index) => {
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter: () => updateProgress(index),
+                onEnterBack: () => updateProgress(index)
+            });
+        });
+
+        function updateProgress(index) {
+            progressDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        progressDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const target = document.getElementById('era-' + dot.dataset.target);
+                gsap.to(window, { duration: 1.5, scrollTo: { y: target, offsetY: 0 }, ease: 'power3.inOut' });
+            });
+        });
+
+        // Event Card Interactions
+        const modal = document.getElementById('modal');
+        const modalYear = document.getElementById('modalYear');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+
+        document.querySelectorAll('.event-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.event-detail')) return;
+
+                const year = card.dataset.year;
+                const title = card.dataset.title;
+                const desc = card.dataset.desc;
+                const detail = card.dataset.detail;
+
+                modalYear.textContent = year;
+                modalTitle.textContent = title;
+                modalBody.innerHTML = `<p><strong>${desc}</strong></p><p>${detail}</p>`;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Add glow effect to progress dots based on active era
+        const eraColors = {
+            '1950s': '#10b981',
+            '1960s': '#f59e0b',
+            '1980s': '#06b6d4',
+            '1990s': '#22c55e',
+            '2000s': '#3b82f6',
+            '2010s': '#8b5cf6',
+            '2020s': '#ec4899'
+        };
+
+        // Smooth scroll for intro
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            gsap.to(window, { duration: 1.5, scrollTo: { y: '#timeline', offsetY: 0 }, ease: 'power3.inOut' });
+        });
+
+        // Add scroll-triggered background color shifts
+        gsap.to('.timeline-path', {
+            scrollTrigger: {
+                trigger: '.timeline-container',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1
+            },
+            scaleY: 1,
+            transformOrigin: 'top center'
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+</body>
+</html>
